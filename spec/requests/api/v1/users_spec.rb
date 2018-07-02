@@ -6,7 +6,8 @@ RSpec.describe 'Users API', type: :request  do
   let(:headers) do
     {
       'Accept' => 'application/vnd.taskmanager.v1',
-      'Content-Type' => Mime[:json].to_s
+      'Content-Type' => Mime[:json].to_s,
+      'Authorization' => user.auth_token
     }
   end
 
@@ -107,7 +108,7 @@ RSpec.describe 'Users API', type: :request  do
 
   describe 'DELETE /users/:id' do
     before do
-      delete "/users/#{user_id}", params: { }.to_json, headers: headers
+      delete "/users/#{user_id}", params: {}, headers: headers
     end
 
     it 'returns the status code 204' do

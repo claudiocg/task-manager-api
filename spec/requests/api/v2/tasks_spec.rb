@@ -19,7 +19,7 @@ RSpec.describe 'Tasks API' do
       expect(response).to have_http_status(200)
     end
     it 'returns 5 tasks from database' do
-      expect(json_body[:tasks].count).to eq(5)
+      expect(json_body[:data].count).to eq(5)
     end
   end
   describe 'GET /tasks/:id' do
@@ -30,7 +30,7 @@ RSpec.describe 'Tasks API' do
       expect(response).to have_http_status(200)
     end
     it 'should returns the jason for tasks' do
-      expect(json_body[:title]).to eq(task.title)
+      expect(json_body[:data][:attributes][:title]).to eq(task.title)
     end
   end
   describe 'POST /tasks' do
@@ -48,15 +48,15 @@ RSpec.describe 'Tasks API' do
         expect(Task.find_by(title: task_params[:title])).not_to be_nil
       end
       it 'should returns the json for created task' do
-        expect(json_body[:title]).to eq(task_params[:title])
+        expect(json_body[:data][:attributes][:title]).to eq(task_params[:title])
       end
       it 'should assign the created task for the current user' do
-        expect(json_body[:user_id]).to eq(user.id)
+        expect(json_body[:data][:attributes][:'user-id']).to eq(user.id)
       end
 
     end
 
-    context 'when params are invalida' do
+    context 'when params are invalid' do
       let(:task_params) { attributes_for(:task, title: ' ') }
       it 'returns status code 422' do
         expect(response).to have_http_status(422)
@@ -80,7 +80,7 @@ RSpec.describe 'Tasks API' do
         expect(response).to have_http_status(200)
       end
       it 'should return the json for updated task' do
-        expect(json_body[:title]).to eq(task_params[:title])
+        expect(json_body[:data][:attributes][:title]).to eq(task_params[:title])
       end
       it 'should update the task in database' do
         expect(Task.find_by(title: task_params[:title])).not_to be_nil
